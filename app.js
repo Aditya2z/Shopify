@@ -1,34 +1,36 @@
-const seedAdminUsers = require("./seedAdmin");
+const seedAdminUsers = require("./server/seedAdmin");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const auth = require("./middlewares/auth");
+const auth = require("./server/middlewares/auth");
 
-const usersRouter = require("./routes/users");
-const productsRouter = require("./routes/products");
-const adminRouter = require("./routes/admin");
-const cartRouter = require("./routes/cart");
+const usersRouter = require("./server/routes/users");
+const productsRouter = require("./server/routes/products");
+const adminRouter = require("./server/routes/admin");
+const cartRouter = require("./server/routes/cart");
 
 const app = express();
 
 mongoose
   .connect("mongodb://127.0.0.1/e-commerce")
   .then(() => {
-    console.log("Connected Successfully to e-commerce, running at port 5000.");
+    console.log("Connected Successfully to e-commerce, running at port 8080.");
     seedAdminUsers();
   })
   .catch((err) => {
     console.log(err.message);
   });
 
+console.log("check1");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, 'public')));
+console.log("check2");
 
 app.use(auth.userInfo);
 

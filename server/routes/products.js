@@ -1,12 +1,16 @@
 var express = require("express");
 var router = express.Router();
 var Product = require("../models/product");
-var Cart = require("../models/cart");
 var auth = require("../middlewares/auth");
+
+console.log("check4");
+
 
 /* GET products listing. */
 router.get("/", function (req, res, next) {
-  remove = req.user ? "" : "-liked";
+  console.log("check5");
+  console.log("Route handler for /api/products is reached");
+  let remove = req.user ? "" : "-liked";
 
   const selectedCategory = req.query.category;
   let query = selectedCategory ? { category: selectedCategory } : {};
