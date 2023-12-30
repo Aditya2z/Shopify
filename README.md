@@ -67,12 +67,12 @@ Make sure you have the following installed:
 The application will be accessible at http://localhost:3000 by default.
 
 ### Usage
--[Open your web browser and navigate to http://localhost:3000.]
--[Sign up for a new account or log in if you already have one.]
--[As a user, you can like your favorite products.]
--[Add products to the shopping cart.]
--[Review and proceed to checkout.]
--[Feel free to explore the codebase to understand how the different features are implemented.]
+- Open your web browser and navigate to http://localhost:3000.
+- Sign up for a new account or log in if you already have one.
+- As a user, you can like your favorite products.
+- Add products to the shopping cart.
+- Review and proceed to checkout.
+- Feel free to explore the codebase to understand how the different features are implemented.
 
 ### Contributing
 Contributions are welcome! Please follow our contribution guidelines for details on the process.
