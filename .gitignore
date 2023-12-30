@@ -1,1 +1,33 @@
-node_modules
+# Node.js
+node_modules/
+
+# Output of 'npm pack'
+*.tgz
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Build output
+/build
+/dist
+
+# Environment variables
+.env
+
+# Compiled binary addons
+/build/Release
+/napi
+
+# IDE files
+.vscode/
+.idea/
+
+# User-specific files
+npm-debug.log*
+yarn-error.log*

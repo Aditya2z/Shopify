@@ -5,6 +5,8 @@ var auth = require("../middlewares/auth");
 var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+console.log("check6");
+
 /* GET users listing. */
 router.get("/", auth.isLoggedIn, auth.isAdmin, function (req, res, next) {
   User.find({}, "-password")
@@ -34,7 +36,6 @@ router.get("/user", auth.isLoggedIn, function (req, res, next) {
 router.post("/register", function (req, res, next) {
   const { email, firstname, lastname, password } = req.body;
 
-  // Get fullname of user
   if (lastname) {
     req.body.name = firstname + " " + lastname;
   } else {
@@ -45,24 +46,21 @@ router.post("/register", function (req, res, next) {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        // Email is already registered
         const error = new Error(
           "Email is already registered. Please use a different email."
         );
-        error.status = 400; // Bad Request
+        error.status = 400;
         return next(error);
       }
 
-      // Check if the password is less than 6 characters
       if (password.length < 6) {
         const error = new Error(
           "Password should be at least 6 characters long."
         );
-        error.status = 400; // Bad Request
+        error.status = 400;
         return next(error);
       }
 
-      // Proceed with registration if everything is valid
       User.create(req.body)
         .then((newUser) => {
           res.json({
@@ -85,7 +83,7 @@ router.post("/login", auth.isBlocked, function (req, res, next) {
   var { email, password } = req.body;
   if (!email || !password) {
     const error = new Error("Email/Password Required!");
-    error.status = 400; // Bad Request
+    error.status = 400;
     return next(error);
   }
 
@@ -93,7 +91,7 @@ router.post("/login", auth.isBlocked, function (req, res, next) {
     .then((user) => {
       if (!user) {
         const error = new Error("Email not registered");
-        error.status = 404; // Not Found
+        error.status = 404;
         return next(error);
       }
 
@@ -101,7 +99,7 @@ router.post("/login", auth.isBlocked, function (req, res, next) {
         if (err) return next(err);
         if (!result) {
           const error = new Error("Wrong Password!");
-          error.status = 401; // Unauthorized
+          error.status = 401;
           return next(error);
         }
 

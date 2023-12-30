@@ -1,16 +1,16 @@
-const seedAdminUsers = require("./server/seedAdmin");
+const seedAdminUsers = require("./seedAdmin");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const auth = require("./server/middlewares/auth");
+const auth = require("./middlewares/auth");
 
-const usersRouter = require("./server/routes/users");
-const productsRouter = require("./server/routes/products");
-const adminRouter = require("./server/routes/admin");
-const cartRouter = require("./server/routes/cart");
+const usersRouter = require("./routes/users");
+const productsRouter = require("./routes/products");
+const adminRouter = require("./routes/admin");
+const cartRouter = require("./routes/cart");
 
 const app = express();
 

@@ -58,5 +58,12 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "bundle.css",
     })
-  ]
+  ],
+  devServer: {
+    compress: true,
+    port: 3000, // Port for your webpack-dev-server
+    proxy: {
+      '/api': 'http://localhost:8080', // Proxy API requests to your backend server
+    },
+  },
 };
