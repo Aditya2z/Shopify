@@ -15,15 +15,15 @@ Welcome to our Shopify App repository! This project is a simple web application 
 ## Features
 
 1. **User Authentication:**
-   - Shopify store owners can sign up for a new account.
+   - Shopify users can sign up for a new account.
    - Existing users can log in to their accounts.
 
 2. **Product Liking:**
-   - Store owners can like their favorite products.
+   - Users can like their favorite products.
    - Liked products are saved for future reference.
 
 3. **Shopping Cart:**
-   - Store owners can add products to the shopping cart.
+   - Users can add products to the shopping cart.
    - The shopping cart keeps track of selected items.
 
 ## Getting Started
@@ -39,7 +39,38 @@ Make sure you have the following installed:
 
 1. **Clone the repository:**
 
-```bash
-git clone https://github.com/your-username/shopify-app.git
-cd shopify-app
-```
+  ```bash
+  git clone https://github.com/your-username/shopify-app.git
+  cd shopify-app
+  ```
+2. **Create a .env file in the root of the project and add the following:**
+  ```bash
+  JWT_SECRET=your_shopify_api_secret
+  Replace your_shopify_api_secret with the actual credentials from your Shopify Partner account.
+  ```
+
+3. **Build the project using Webpack:**
+  ```bash
+  npm run build
+  ```
+
+4. **Start the application:**
+  ```bash
+  npm start
+  ```
+
+The application will be accessible at http://localhost:3000 by default.
+
+### Usage
+Open your web browser and navigate to http://localhost:3000.
+Sign up for a new account or log in if you already have one.
+As a user, you can like your favorite products.
+Add products to the shopping cart.
+Review and proceed to checkout.
+Feel free to explore the codebase to understand how the different features are implemented.
+
+### Contributing
+Contributions are welcome! Please follow our contribution guidelines for details on the process.
+
+### License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute the code as per the license terms.
