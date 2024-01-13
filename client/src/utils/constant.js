@@ -1,4 +1,4 @@
-const RootUrl = "/api";
+const RootUrl = " /api";
 
 const productUrl = `${RootUrl}/products`;
 const usersUrl = `${RootUrl}/users`;

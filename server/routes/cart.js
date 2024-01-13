@@ -149,7 +149,7 @@ router.put("/decrease/:productId", auth.isLoggedIn, (req, res, next) => {
       cartItem.quantity = Math.max(1, cartItem.quantity - 1);
 
       if (cartItem.quantity === 0) {
-        cart.items = cart.items.filter((item) => item.product._id != productId);
+        cart.items = cart.items.filter((item) => item.product._id !== productId);
       }
 
       return cart.save();
@@ -180,7 +180,7 @@ router.delete("/:productId", auth.isLoggedIn, (req, res, next) => {
         return next(error);
       }
 
-      cart.items = cart.items.filter((item) => item.product._id != productId);
+      cart.items = cart.items.filter((item) => item.product._id !== productId);
 
       return cart.save();
     })

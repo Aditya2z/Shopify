@@ -1,13 +1,38 @@
 import React from "react";
-import { localStorageKey } from "../utils/constant";
+import { cartUrl, localStorageKey } from "../utils/constant";
 
 function CartItem(props) {
-  const { setShowCart, productObj, setCartProducts, setError } = props;
+  const { setShowCart, productObj, setCartProducts, setError, debounce } = props;
+
+  const updateProductQuantity = (productId, newQuantity) => {
+    setCartProducts((prevCartProducts) => {
+      return prevCartProducts.map((cartItem) => {
+        if (cartItem.product._id === productId) {
+          return {
+            ...cartItem,
+            quantity: newQuantity,
+          };
+        }
+        return cartItem;
+      });
+    });
+  };
+
+  const removeCartItem = (productId) => {
+    setCartProducts((prevCartProducts) => {
+      return prevCartProducts.filter(
+        (cartItem) => cartItem.product._id !== productId
+      );
+    });
+  };
+
+  const { product, quantity } = productObj;
+  const { name, _id, price, image_url } = product;
   const storageKey = localStorage.getItem(localStorageKey);
 
-  // Function to increase the quantity of a product in the user's cart
-  const increaseQuantity = (productId) => {
-    return fetch(`/api/cart/increase/${productId}`, {
+  const increaseQuantity = debounce((productId, quantity) => {
+    updateProductQuantity(productId, quantity + 1);
+    return fetch(`${cartUrl}/increase/${productId}`, {
       method: "PUT",
       headers: {
         Authorization: storageKey,
@@ -27,11 +52,11 @@ function CartItem(props) {
           setError(errorText);
         });
       });
-  };
+  });
 
-  // Function to decrease the quantity of a product in the user's cart
-  const decreaseQuantity = (productId) => {
-    return fetch(`/api/cart/decrease/${productId}`, {
+  const decreaseQuantity = debounce((productId) => {
+    updateProductQuantity(productId, quantity - 1);
+    return fetch(`${cartUrl}/decrease/${productId}`, {
       method: "PUT",
       headers: {
         Authorization: storageKey,
@@ -51,11 +76,11 @@ function CartItem(props) {
           setError(errorText);
         });
       });
-  };
+  });
 
-  // Function to remove an item from the user's cart
   const removeFromCart = (productId) => {
-    return fetch(`/api/cart/${productId}`, {
+    removeCartItem(productId);
+    fetch(`${cartUrl}/${productId}`, {
       method: "DELETE",
       headers: {
         Authorization: storageKey,
@@ -71,7 +96,6 @@ function CartItem(props) {
         setCartProducts(data.cart.items);
       })
       .catch((errorPromise) => {
-        console.log(errorPromise);
         errorPromise.then((errorObj) => {
           setError(errorObj);
         });
@@ -98,28 +122,14 @@ function CartItem(props) {
     );
   }
 
-  const { product, quantity } = productObj;
-  const { name, _id, price, image_url } = product;
-
   return (
     <div className="cart-item">
-      <div className="cart-item-control">
-        <button
-          className="close-btn"
-          type="button"
-          onClick={() => {
-            removeFromCart(_id);
-          }}
-        >
-          Remove Item❌
-        </button>
-      </div>
       <div className="flex justify-between align-center">
         <figure className="flex-20">
           <img src={image_url} alt={name} />
         </figure>
-        <h4 className="flex-32">{name}</h4>
-        <div className="quantity-control flex justify-between align-center flex-20">
+        <h4 className="flex-49">{name}</h4>
+        <div className="quantity-control flex justify-between flex-20">
           <button
             className="quantity-btn"
             onClick={() => {
@@ -130,21 +140,37 @@ function CartItem(props) {
               }
             }}
           >
-            -
+            <i>-</i>
           </button>
           <p>{quantity}</p>
           <button
             className="quantity-btn"
-            onClick={() => increaseQuantity(_id)}
+            onClick={() => increaseQuantity(_id, quantity)}
           >
             +
           </button>
         </div>
-        <div className="product-price flex-20">
-          <p className="small-text">
-            ${price} * {quantity} ={" "}
-          </p>
-          <h3>${(price * quantity).toFixed(2)}</h3>
+      </div>
+      <div className="cart-item-control flex justify-between">
+        <button
+          className="close-btn flex flex-49"
+          type="button"
+          onClick={() => {
+            removeFromCart(_id);
+          }}
+        >
+          Remove Item&nbsp;
+          <i>
+            <img src="/static/images/bin.svg" alt="bin" />
+          </i>
+        </button>
+        <div className="product-price flex-49">
+          <h3>
+            <span className="small-text">
+              ${price} * {quantity} ={" "}
+            </span>
+            ${(price * quantity).toFixed(2)}
+          </h3>
         </div>
       </div>
     </div>

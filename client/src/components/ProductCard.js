@@ -1,18 +1,26 @@
 import React from "react";
 import Like from "./Like";
-import { localStorageKey } from "../utils/constant";
+import { localStorageKey, cartUrl } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
 
 function ProductCard(props) {
-  const { product, setShowCart, setError, setCartProducts, isLoggedIn } = props;
+  const {
+    product,
+    setShowCart,
+    setError,
+    setCartProducts,
+    isLoggedIn,
+    debounce,
+  } = props;
 
   const storageKey = localStorage.getItem(localStorageKey) || "";
   const navigate = useNavigate();
 
   // Function to add a product to the user's cart
-  const addToCart = (productId) => {
-    if(isLoggedIn) {
-      fetch(`/api/cart/${productId}`, {
+  const addToCart = debounce((productId) => {
+    if (isLoggedIn) {
+      setShowCart(true);
+      fetch(`${cartUrl}/${productId}`, {
         method: "POST",
         headers: {
           Authorization: storageKey,
@@ -20,14 +28,12 @@ function ProductCard(props) {
       })
         .then((res) => {
           if (res.ok) {
-            setShowCart(true);
             return res.json();
           }
           throw res.json();
         })
         .then((data) => {
           setCartProducts(data.cart.items);
-          setShowCart(true);
         })
         .catch((errorPromise) => {
           errorPromise.then((errorObj) => {
@@ -37,7 +43,7 @@ function ProductCard(props) {
     } else {
       navigate("/login");
     }
-  };
+  });
 
   return (
     <>
@@ -49,6 +55,7 @@ function ProductCard(props) {
               product={product}
               isLoggedIn={isLoggedIn}
               setError={setError}
+              debounce={debounce}
             />
           </p>
         </figure>
@@ -62,7 +69,7 @@ function ProductCard(props) {
         <button
           type="button"
           className="btn-2"
-          onClick={(event) => {
+          onClick={() => {
             addToCart(product._id);
           }}
         >

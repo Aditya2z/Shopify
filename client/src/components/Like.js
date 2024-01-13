@@ -5,7 +5,7 @@ import { productUrl } from "../utils/constant";
 import { localStorageKey } from "../utils/constant";
 
 function Like(props) {
-  const { product, isLoggedIn, setError } = props;
+  const { product, isLoggedIn, setError, debounce } = props;
   const navigate = useNavigate();
 
   const storageKey = localStorage.getItem(localStorageKey) || "";
@@ -16,7 +16,9 @@ function Like(props) {
 
   useEffect(() => {},[isLoggedIn]);
 
-  const LikeProduct = (productid) => {
+  const LikeProduct = debounce((productid) => {
+    setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1));
+    setLiked(!liked);
     let method = "PUT";
     if (isLiked) {
       method = "DELETE";
@@ -41,7 +43,7 @@ function Like(props) {
           });
         });
     }
-  };
+  });
 
   return (
     <button
@@ -49,8 +51,6 @@ function Like(props) {
       className={`like flex ${isLiked ? "active" : ""}`}
       onClick={() => {
         if (isLoggedIn) {
-          setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1));
-          setLiked(!liked);
           LikeProduct(_id);
         } else {
           navigate("/login");
