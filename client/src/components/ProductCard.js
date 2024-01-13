@@ -16,9 +16,29 @@ function ProductCard(props) {
   const storageKey = localStorage.getItem(localStorageKey) || "";
   const navigate = useNavigate();
 
+  const addCartItem = (productId) => {
+    setCartProducts((prevCartProducts) => {
+    const updatedCartProducts = [...prevCartProducts];
+    const existingCartItemIndex = updatedCartProducts.findIndex(
+      (cartItem) => cartItem.product._id === productId
+    );
+
+    if (existingCartItemIndex !== -1) {
+      updatedCartProducts[existingCartItemIndex].quantity += 1;
+    } else {
+      updatedCartProducts.push({
+        product: product,
+        quantity: 1,
+      });
+    }
+    return updatedCartProducts;
+  })
+};
+
   // Function to add a product to the user's cart
   const addToCart = debounce((productId) => {
     if (isLoggedIn) {
+      addCartItem(productId);
       setShowCart(true);
       fetch(`${cartUrl}/${productId}`, {
         method: "POST",
@@ -31,9 +51,6 @@ function ProductCard(props) {
             return res.json();
           }
           throw res.json();
-        })
-        .then((data) => {
-          setCartProducts(data.cart.items);
         })
         .catch((errorPromise) => {
           errorPromise.then((errorObj) => {

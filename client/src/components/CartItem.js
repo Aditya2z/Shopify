@@ -44,9 +44,6 @@ function CartItem(props) {
         }
         throw res.json();
       })
-      .then((data) => {
-        setCartProducts(data.cart.items);
-      })
       .catch((errorPromise) => {
         errorPromise.then((errorText) => {
           setError(errorText);
@@ -68,9 +65,6 @@ function CartItem(props) {
         }
         throw res.json();
       })
-      .then((data) => {
-        setCartProducts(data.cart.items);
-      })
       .catch((errorPromise) => {
         errorPromise.then((errorText) => {
           setError(errorText);
@@ -78,7 +72,7 @@ function CartItem(props) {
       });
   });
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = debounce((productId) => {
     removeCartItem(productId);
     fetch(`${cartUrl}/${productId}`, {
       method: "DELETE",
@@ -92,15 +86,12 @@ function CartItem(props) {
         }
         throw res.json();
       })
-      .then((data) => {
-        setCartProducts(data.cart.items);
-      })
       .catch((errorPromise) => {
         errorPromise.then((errorObj) => {
           setError(errorObj);
         });
       });
-  };
+  });
 
   if (!productObj) {
     return (

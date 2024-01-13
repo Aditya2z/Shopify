@@ -10,8 +10,9 @@ function LoginPage(props) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [otherError, setOtherError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { updateUser, setError, isVerifying, setIsVerifying } = props;
+  const { updateUser } = props;
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -24,36 +25,35 @@ function LoginPage(props) {
   };
 
   const validateForm = () => {
+    let isValid = true;
+  
     switch (true) {
       case !email:
         setEmailError("Email field cannot be empty");
+        isValid = false;
         break;
       case !email.includes("@"):
         setEmailError("Invalid email address");
+        isValid = false;
         break;
       default:
+        setEmailError("");
         break;
     }
-
+  
     switch (true) {
       case !password:
         setPasswordError("Password field cannot be empty");
-        break;
-      case password.length < 6:
-        setPasswordError("Password must be at least 6 characters long");
-        break;
-      case !/[A-Za-z]/.test(password) || !/\d/.test(password):
-        setPasswordError("Password must contain at least one letter and one number");
+        isValid = false;
         break;
       default:
+        setPasswordError("");
         break;
     }
-
-    setEmailError(emailError);
-    setPasswordError(passwordError);
-
-    return !(emailError || passwordError);
+  
+    return isValid;
   };
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -61,7 +61,7 @@ function LoginPage(props) {
     const isValid = validateForm();
 
     if (isValid) {
-      setIsVerifying(true);
+      setIsLoading(true);
 
       fetch(`${usersUrl}/login`, {
         method: "POST",
@@ -77,7 +77,6 @@ function LoginPage(props) {
           throw response.json();
         })
         .then((data) => {
-          setError(null);
           updateUser(data);
           navigate("/");
         })
@@ -87,12 +86,12 @@ function LoginPage(props) {
         });
         })
         .finally(() => {
-          setIsVerifying(false);
+          setIsLoading(false);
         });
     }
   };
 
-  if (isVerifying) {
+  if (isLoading) {
     return <Loader />;
   }
 
