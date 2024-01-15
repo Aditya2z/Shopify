@@ -26,6 +26,8 @@ Welcome to our Shopify App repository! This project is a simple web application 
    - Users can add products to the shopping cart.
    - The shopping cart keeps track of selected items.
 
+
+
 ## Getting Started
 
 ### Prerequisites
@@ -46,7 +48,7 @@ Make sure you have the following installed:
 2. **Create a .env file in the root of the project and add the following:**
   ```bash
   JWT_SECRET=your_shopify_api_secret
-  Replace your_shopify_api_secret with the actual credentials from your Shopify Partner account.
+  Replace your_shopify_api_secret with the actual credentials.
   ```
 
 3. **Install dependecies:**
