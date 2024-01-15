@@ -1,6 +1,7 @@
 # Shopify App
 
 Welcome to our Shopify App repository! This project is a simple web application designed as a Shopify app, providing basic functionalities such as user authentication (login and signup), product liking, and adding items to the shopping cart.
+![App landing page](./readme-assets/image1.jpg)
 
 ## Table of Contents
 
@@ -25,6 +26,8 @@ Welcome to our Shopify App repository! This project is a simple web application 
 3. **Shopping Cart:**
    - Users can add products to the shopping cart.
    - The shopping cart keeps track of selected items.
+
+![Cart](./readme-assets/image2.jpg)
 
 
 
