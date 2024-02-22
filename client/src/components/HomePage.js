@@ -5,9 +5,12 @@ import ErrorPage from "./ErrorPage";
 import CartSidebar from "./CartSidebar";
 import "../styles/style.css";
 import { productUrl, localStorageKey, cartUrl } from "../utils/constant";
+import { useSelector } from "react-redux";
 
-function HomePage(props) {
-  const { setShowCart, showCart, isLoggedIn } = props;
+function HomePage() {
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
+  const showCart = useSelector((state) => state.app.showCart);
+
   const [products, setProducts] = useState(null);
   const [cartProducts, setCartProducts] = useState(null);
   const [error, setError] = useState(null);
@@ -100,20 +103,13 @@ function HomePage(props) {
             <ProductCard
               key={product._id}
               product={product}
-              setShowCart={setShowCart}
-              showCart={showCart}
-              setError={setError}
               setCartProducts={setCartProducts}
-              isLoggedIn={isLoggedIn}
               debounce={debounce}
             />
           );
         })}
       {showCart && (
         <CartSidebar
-          setShowCart={setShowCart}
-          setError={setError}
-          isLoggedIn={isLoggedIn}
           cartProducts={cartProducts}
           setCartProducts={setCartProducts}
           debounce={debounce}

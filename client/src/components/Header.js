@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { localStorageKey } from "../utils/constant";
 import "../styles/style.css";
+import { setShowCart, setIsVerifying } from "../slices/appSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 function Header(props) {
-  const { isLoggedIn, updateUser, user, setShowCart, setIsVerifying } = props;
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
+  const { updateUser } = props;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    setIsVerifying(true);
+    dispatch(setIsVerifying(true));
     localStorage.removeItem(localStorageKey);
     updateUser(null);
     navigate(0);
-    setIsVerifying(false);
+    dispatch(setIsVerifying(false));
   };
 
   return (
@@ -22,11 +26,7 @@ function Header(props) {
       </a>
       <nav>
         {isLoggedIn ? (
-          <AuthHeader
-            handleLogout={handleLogout}
-            user={user}
-            setShowCart={setShowCart}
-          />
+          <AuthHeader handleLogout={handleLogout} />
         ) : (
           <NonAuthHeader />
         )}
@@ -57,9 +57,11 @@ function NonAuthHeader() {
 }
 
 function AuthHeader(props) {
+  const user = useSelector((state) => state.app.user);
   const [showMenu, setShowMenu] = useState(false);
 
-  const { user, setShowCart, handleLogout } = props;
+  const { handleLogout } = props;
+  const dispatch = useDispatch();
 
   const handleHamburgerMenu = () => {
     setShowMenu(!showMenu);
@@ -79,14 +81,17 @@ function AuthHeader(props) {
               className="hamburger-nav-menu-item"
               to="/"
               onClick={() => {
-                setShowCart(true);
+                dispatch(setShowCart(true));
               }}
             >
               🛒My Cart
             </Link>
           </li>
           <li>
-            <Link className="hamburger-nav-menu-item flex align-center" to={`/`}>
+            <Link
+              className="hamburger-nav-menu-item flex align-center"
+              to={`/`}
+            >
               {user.name}
             </Link>
           </li>
@@ -103,7 +108,7 @@ function AuthHeader(props) {
             className="nav-menu-item"
             to="/"
             onClick={() => {
-              setShowCart(true);
+              dispatch(setShowCart(true));
             }}
           >
             🛒My Cart

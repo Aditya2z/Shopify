@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./Header";
 import LoginPage from "./Login";
@@ -10,24 +10,29 @@ import FullPageLoader from "./loader/FullPageLoader";
 import ErrorPage from "./ErrorPage";
 import Footer from "./Footer";
 import { userVerifyUrl, localStorageKey } from "../utils/constant";
+import {
+  setUser,
+  setIsLoggedIn,
+  setIsVerifying,
+  setError,
+} from "../slices/appSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showCart, setShowCart] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(true);
-  const [error, setError] = useState(null);
-
+  const dispatch = useDispatch();
   const storageKey = localStorage.getItem(localStorageKey) || "";
+  const isVerifying = useSelector((state) => state.app.isVerifying);
+  const error = useSelector((state) => state.app.error);
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
 
   const updateUser = (data = null) => {
-    setIsLoggedIn(!isLoggedIn);
+    dispatch(setIsLoggedIn(!isLoggedIn));
     if (data) {
       const token = data.token || storageKey;
-      setUser(data.user);
+      dispatch(setUser(data.user));
       localStorage.setItem(localStorageKey, token);
     } else {
-      setUser(null);
+      dispatch(setUser(null));
     }
   };
 
@@ -47,16 +52,23 @@ function App() {
         })
         .then((data) => {
           updateUser(data);
-          setIsVerifying(false);
+          dispatch(setIsVerifying(false));
         })
-        .catch((errorPromise) => {
-          errorPromise.then((errorObj) => {
-            setError(errorObj);
-            setIsVerifying(false);
-          });
+        .catch((error) => {
+          if (Promise.resolve(error) === error) {
+            // `error` is a Promise
+            error.then((errorObj) => {
+              dispatch(setError(errorObj));
+              dispatch(setIsVerifying(false));
+            });
+          } else {
+            // `error` is not a Promise
+            dispatch(setError(error));
+            dispatch(setIsVerifying(false));
+          }
         });
     } else {
-      setIsVerifying(false);
+      dispatch(setIsVerifying(false));
     }
   }, []);
 
@@ -66,51 +78,22 @@ function App() {
 
   return (
     <>
-      <Header
-        isLoggedIn={isLoggedIn}
-        user={user}
-        setShowCart={setShowCart}
-        updateUser={updateUser}
-        setIsVerifying={setIsVerifying}
-      />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            error ? (
-              <ErrorPage error={error} />
-            ) : (
-              <HomePage
-                setShowCart={setShowCart}
-                showCart={showCart}
-                setUser={setUser}
-                isLoggedIn={isLoggedIn}
-              />
-            )
-          }
-        />
+      <Header updateUser={updateUser} />
+      <main>
+        <Routes>
+          <Route path="/" element={error ? <ErrorPage /> : <HomePage />} />
 
-        <Route
-          path="/login"
-          element={
-            isLoggedIn ? (
-              <AlreadyLoggedIn />
-            ) : (
-              <LoginPage
-                updateUser={updateUser}
-                setError={setError}
-                isVerifying={isVerifying}
-                setIsVerifying={setIsVerifying}
-              />
-            )
-          }
-        />
-        <Route
-          path="/signup"
-          element={isLoggedIn ? <AlreadyLoggedIn /> : <SignupPage />}
-        />
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
+          <Route
+            path="/login"
+            element={isLoggedIn ? <AlreadyLoggedIn /> : <LoginPage updateUser={updateUser} />}
+          />
+          <Route
+            path="/signup"
+            element={isLoggedIn ? <AlreadyLoggedIn /> : <SignupPage />}
+          />
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </main>
       <Footer />
     </>
   );

@@ -24,13 +24,11 @@ mongoose
     console.log(err.message);
   });
 
-console.log("check1");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-console.log("check2");
 
 app.use(auth.userInfo);
 

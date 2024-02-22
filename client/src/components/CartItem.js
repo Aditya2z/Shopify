@@ -1,8 +1,11 @@
 import React from "react";
 import { cartUrl, localStorageKey } from "../utils/constant";
+import { useDispatch } from "react-redux";
+import { setError, setShowCart } from "../slices/appSlice";
 
 function CartItem(props) {
-  const { setShowCart, productObj, setCartProducts, setError, debounce } = props;
+  const dispatch = useDispatch();
+  const { productObj, setCartProducts, debounce } = props;
 
   const updateProductQuantity = (productId, newQuantity) => {
     setCartProducts((prevCartProducts) => {
@@ -46,7 +49,7 @@ function CartItem(props) {
       })
       .catch((errorPromise) => {
         errorPromise.then((errorText) => {
-          setError(errorText);
+          dispatch(setError(errorText));
         });
       });
   });
@@ -67,7 +70,7 @@ function CartItem(props) {
       })
       .catch((errorPromise) => {
         errorPromise.then((errorText) => {
-          setError(errorText);
+          dispatch(setError(errorText));
         });
       });
   });
@@ -88,7 +91,7 @@ function CartItem(props) {
       })
       .catch((errorPromise) => {
         errorPromise.then((errorObj) => {
-          setError(errorObj);
+          dispatch(setError(errorObj));
         });
       });
   });
@@ -102,7 +105,7 @@ function CartItem(props) {
             className="close-btn"
             type="button"
             onClick={() => {
-              setShowCart(false);
+              dispatch(setShowCart(false));
             }}
           >
             Close❌

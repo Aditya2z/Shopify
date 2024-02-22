@@ -4,19 +4,17 @@ import { usersUrl } from "../utils/constant";
 import Loader from "./loader/Loader";
 import "../styles/style.css";
 
-function SignupPage(props) {
+function SignupPage() {
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
     password: "",
-    username: "",
   });
   const [errors, setErrors] = useState({
     firstname: "",
     email: "",
     password: "",
-    username: "",
     other: "",
   });
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,6 @@ function SignupPage(props) {
       firstname: "",
       email: "",
       password: "",
-      username: "",
       other: "",
     };
 
@@ -58,17 +55,12 @@ function SignupPage(props) {
         "Password must be at least 6 characters long and contain at least one letter and one number";
     }
 
-    if (!formData.username || formData.username.length < 6) {
-      newErrors.username = "Username must be at least 6 characters long";
-    }
-
     setErrors(newErrors);
 
     return !(
       newErrors.firstname ||
       newErrors.email ||
-      newErrors.password ||
-      newErrors.username
+      newErrors.password
     );
   };
 
@@ -118,7 +110,7 @@ function SignupPage(props) {
       <h1 className="signup-heading">Signup</h1>
       <form method="post" action="/users" onSubmit={handleSubmit}>
         <div>
-          <div className="form-group flex justify-between align-center">
+          <div className="form-group flex justify-between align-center no-flex">
             <div>
               <label htmlFor="firstname">Firstname</label>
               <input
@@ -174,20 +166,6 @@ function SignupPage(props) {
             className="input-field"
           />
           <span className="error">{errors.password}</span>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Create Username"
-            value={formData.username}
-            onChange={handleInputChange}
-            className="input-field"
-          />
-          <span className="error">{errors.username}</span>
         </div>
 
         <button type="submit" className="btn-2">

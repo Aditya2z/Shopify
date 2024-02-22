@@ -2,44 +2,42 @@ import React from "react";
 import Like from "./Like";
 import { localStorageKey, cartUrl } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowCart, setError } from "../slices/appSlice";
 
 function ProductCard(props) {
-  const {
-    product,
-    setShowCart,
-    setError,
-    setCartProducts,
-    isLoggedIn,
-    debounce,
-  } = props;
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
+
+  const { product, setCartProducts, debounce } = props;
 
   const storageKey = localStorage.getItem(localStorageKey) || "";
   const navigate = useNavigate();
 
   const addCartItem = (productId) => {
     setCartProducts((prevCartProducts) => {
-    const updatedCartProducts = [...prevCartProducts];
-    const existingCartItemIndex = updatedCartProducts.findIndex(
-      (cartItem) => cartItem.product._id === productId
-    );
+      const updatedCartProducts = [...prevCartProducts];
+      const existingCartItemIndex = updatedCartProducts.findIndex(
+        (cartItem) => cartItem.product._id === productId
+      );
 
-    if (existingCartItemIndex !== -1) {
-      updatedCartProducts[existingCartItemIndex].quantity += 1;
-    } else {
-      updatedCartProducts.push({
-        product: product,
-        quantity: 1,
-      });
-    }
-    return updatedCartProducts;
-  })
-};
+      if (existingCartItemIndex !== -1) {
+        updatedCartProducts[existingCartItemIndex].quantity += 1;
+      } else {
+        updatedCartProducts.push({
+          product: product,
+          quantity: 1,
+        });
+      }
+      return updatedCartProducts;
+    });
+  };
 
   // Function to add a product to the user's cart
   const addToCart = debounce((productId) => {
     if (isLoggedIn) {
       addCartItem(productId);
-      setShowCart(true);
+      dispatch(setShowCart(true));
       fetch(`${cartUrl}/${productId}`, {
         method: "POST",
         headers: {
@@ -54,7 +52,7 @@ function ProductCard(props) {
         })
         .catch((errorPromise) => {
           errorPromise.then((errorObj) => {
-            setError(errorObj);
+            dispatch(setError(errorObj));
           });
         });
     } else {
@@ -68,12 +66,7 @@ function ProductCard(props) {
         <figure>
           <img src={product.image_url} alt={product.name} />
           <p className="likes">
-            <Like
-              product={product}
-              isLoggedIn={isLoggedIn}
-              setError={setError}
-              debounce={debounce}
-            />
+            <Like product={product} debounce={debounce} />
           </p>
         </figure>
         <div className="product-details">

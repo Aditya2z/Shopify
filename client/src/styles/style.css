@@ -147,6 +147,11 @@ a {
   text-decoration: none;
 }
 
+.footer {
+  width: 100%;
+  align-self: flex-end;
+}
+
 /* General Styles */
 html {
   font-size: 16px;
@@ -154,9 +159,12 @@ html {
 
 body {
   font-family: "Roboto", sans-serif;
-  max-width: 1370px;
   width: 100%;
   line-height: 1.5;
+}
+
+main {
+  min-height: 80vh;
 }
 
 button,
@@ -425,6 +433,7 @@ header {
 .product-card img {
   height: 100%;
   object-fit: contain;
+  mix-blend-mode: color-burn;
   border-radius: 8px 8px 0 0;
 }
 
@@ -691,16 +700,10 @@ label {
   text-align: center;
 }
 
-.login-container {
-  margin-bottom: 9.25rem;
-}
-
 /* hamburger  default styles*/
 .hamburger-menu {
   display: none;
 }
-
-
 
 /* media queries */
 
@@ -804,6 +807,10 @@ label {
     display: grid;
     grid-template-columns: repeat(1, .9fr);
     justify-content: center;
+  }
+
+  .no-flex {
+    display: block;
   }
 }
 

@@ -5,8 +5,6 @@ var auth = require("../middlewares/auth");
 var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-console.log("check6");
-
 /* GET users listing. */
 router.get("/", auth.isLoggedIn, auth.isAdmin, function (req, res, next) {
   User.find({}, "-password")

@@ -3,8 +3,6 @@ var router = express.Router();
 var Product = require("../models/product");
 var auth = require("../middlewares/auth");
 
-console.log("check4");
-
 
 /* GET products listing. */
 router.get("/", function (req, res, next) {

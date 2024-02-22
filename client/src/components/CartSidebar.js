@@ -1,13 +1,11 @@
 import React from "react";
+import { setShowCart } from "../slices/appSlice";
 import CartItem from "./CartItem";
+import { useDispatch } from "react-redux";
 
 function CartSidebar(props) {
-  const {
-    setShowCart,
-    setError,
-    cartProducts,
-    setCartProducts,
-  } = props;
+  const { cartProducts, setCartProducts, debounce } = props;
+  const dispatch = useDispatch();
 
   const calculateTotal = () => {
     return cartProducts
@@ -19,18 +17,12 @@ function CartSidebar(props) {
       .toFixed(2);
   };
 
-  if ((!cartProducts || cartProducts.length === 0)) {
+  if (!cartProducts || cartProducts.length === 0) {
     return (
       <aside className="cart-sidebar">
         <div className="cart-header flex justify-between align-center">
           <h2>My Cart:</h2>
-          <button
-            className="close-btn"
-            type="button"
-            onClick={() => {
-              setShowCart(false);
-            }}
-          >
+          <button className="close-btn" type="button" onClick={() => {}}>
             ❌
           </button>
         </div>
@@ -48,7 +40,7 @@ function CartSidebar(props) {
           className="close-btn"
           type="button"
           onClick={() => {
-            setShowCart(false);
+            dispatch(setShowCart(false));
           }}
         >
           ❌
@@ -56,9 +48,9 @@ function CartSidebar(props) {
       </div>
       {cartProducts.map((productObj, index) => (
         <CartItem
+          debounce={debounce}
           productObj={productObj}
           setCartProducts={setCartProducts}
-          setError={setError}
           key={index}
           {...props}
         />
